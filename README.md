@@ -38,3 +38,7 @@ Open the index.html file in your web browser. You will see the user profile and 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a pull request or open an issue to discuss potential improvements.
+
+## Video
+
+https://drive.google.com/file/d/1Bt-EzxYtximEuuftC-LDFNvY1t3lAnWg/view?usp=sharing
