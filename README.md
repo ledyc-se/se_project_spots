@@ -31,6 +31,10 @@ To get started with Spots, clone the repository, and open the project in your br
 git clone git@github.com:ledyc-se/se_project_spots.git
 cd se_project_spots
 
+## Link to project
+
+https://github.com/ledyc-se/se_project_spots
+
 ## Usage
 
 Open the index.html file in your web browser. You will see the user profile and a collection of travel photos. Use the "Edit Profile" button to update user information and the "New Post" button to add new photos.
