@@ -24,6 +24,9 @@
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   max-width: 413px;
 }
 
@@ -33,10 +36,19 @@
   height: 20px;
   border: 0;
   background-color: transparent;
+  opacity: 40%;
+  background-size: 20px 18px;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  padding: 0;
+  box-sizing: content-box;
+  color: rgba(33, 33, 33, 1);
+  transition: background-image 0.3s ease;
 }
 
 .card__like-button:hover {
   cursor: pointer;
+  background-image: url(../images/Like-btn-blck.svg);
 }
 
 @media screen and (max-width: 627px) {
@@ -47,7 +59,6 @@
   .card__image {
     width: 288px;
     height: 288px;
-    border-radius: 2%;
     text-overflow: unset;
   }
 
@@ -58,13 +69,5 @@
 
   .card__content {
     width: 288px;
-  }
-
-  .card__like-button {
-    background-size: 20px 18px;
-    background-repeat: no-repeat;
-    background-position: bottom;
-    padding: 0;
-    box-sizing: content-box;
   }
 }

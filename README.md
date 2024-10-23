@@ -31,9 +31,9 @@ To get started with Spots, clone the repository, and open the project in your br
 git clone git@github.com:ledyc-se/se_project_spots.git
 cd se_project_spots
 
-## Link to project
+## Deployment
 
-https://github.com/ledyc-se/se_project_spots
+[Deployment Link](https://ledyc-se.github.io/se_project_spots/)
 
 ## Usage
 
