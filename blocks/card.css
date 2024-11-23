@@ -44,6 +44,7 @@
   box-sizing: content-box;
   color: rgba(33, 33, 33, 1);
   transition: opacity 0.3s ease;
+  padding: 0 8px;
 }
 
 .card__like-button:hover {
