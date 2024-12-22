@@ -114,7 +114,7 @@ function handleNewPostFormSubmit(evt) {
   evt.preventDefault();
   const inputValues = {
     name: editCardNameInput.value,
-    link: editCardLinkInput,
+    link: editCardLinkInput.value,
   };
   const cardElement = getCardElement(inputValues);
   cardsList.prepend(cardElement);
