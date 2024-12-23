@@ -86,6 +86,10 @@ function handleNewPostFormSubmit(evt) {
     name: editCardNameInput.value,
     link: editCardLinkInput.value,
   };
+
+  editCardNameInput.value = "";
+  editCardLinkInput.value = "";
+
   const cardElement = getCardElement(inputValues);
   cardsList.prepend(cardElement);
   closeModal(cardModal);
@@ -113,6 +117,7 @@ function getCardElement(data) {
     openModal(previewModal);
 
     previewModalCaptionEl.textContent = data.name;
+
     previewModalImgEl.src = data.link;
     previewModalImgEl.alt = data.name;
   });

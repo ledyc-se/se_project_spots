@@ -89,7 +89,7 @@
   background: rgba(33, 33, 33, 0.8);
 }
 
-@media screen and (max-width: 627px) {
+@media screen and (max-width: 320px) {
   .profile {
     max-width: 288px;
     flex-wrap: wrap;
