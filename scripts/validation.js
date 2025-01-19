@@ -40,10 +40,20 @@ const hasInvalidInput = (inputList) => {
 
 const toggleButtonState = (inputList, profileButtonElm, config) => {
   if (hasInvalidInput(inputList)) {
-    profileButtonElm.classList.add(config.inactiveButtonClass);
+    disableButton(profileButtonElm);
   } else {
-    profileButtonElm.classList.remove(config.inactiveButtonClass);
+    profileButtonElm.disabled = false;
   }
+};
+
+const disableButton = (profileButtonElm) => {
+  profileButtonElm.disabled = true;
+};
+
+const resetValidation = (formElement, inputList, config) => {
+  inputList.forEach((input) => {
+    hideInputError(formElement, input);
+  });
 };
 
 const setEventListeners = (formElement, config) => {
