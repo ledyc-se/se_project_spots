@@ -63,7 +63,7 @@ const cardsList = document.querySelector(".cards__list");
 function openModal(modal) {
   modal.classList.add("modal_opened");
   modal.addEventListener("click", closeModalOverlay);
-  document.addEventListener("keydown", modalEscClose);
+  document.addEventListener("keydown", handleEscape);
 }
 
 function closeModalOverlay(evt) {
@@ -80,14 +80,15 @@ profileEditButton.addEventListener("click", () => {
 
 function closeModal(modal) {
   modal.classList.remove("modal_opened");
-  document.removeEventListener("keydown", modalEscClose);
+  modal.removeEventListener("click", closeModalOverlay);
+
+  document.removeEventListener("keydown", handleEscape);
 }
 
 function handleEditFormSubmit(evt) {
   evt.preventDefault();
   profileName.textContent = editModalNameInput.value;
   profileDescription.textContent = editModalDescriptionInput.value;
-  disableButton(cardSubmitBtn);
 
   closeModal(editModal);
 }
@@ -99,8 +100,8 @@ function handleNewPostFormSubmit(evt) {
     link: editCardLinkInput.value,
   };
 
-  editCardNameInput.value = "";
-  editCardLinkInput.value = "";
+  evt.target.reset(editCardNameInput.value);
+  evt.target.reset(editCardLinkInput.value);
 
   const cardElement = getCardElement(inputValues);
   cardsList.prepend(cardElement);
@@ -168,7 +169,7 @@ initialCards.forEach((card) => {
   cardsList.append(cardElement);
 });
 
-function modalEscClose(evt) {
+function handleEscape(evt) {
   if (evt.key === "Escape") {
     const modalOpened = document.querySelector(".modal_opened");
     if (modalOpened) {

@@ -38,16 +38,16 @@ const hasInvalidInput = (inputList) => {
   });
 };
 
-const toggleButtonState = (inputList, profileButtonElm, config) => {
+const toggleButtonState = (inputList, submitButton, config) => {
   if (hasInvalidInput(inputList)) {
-    disableButton(profileButtonElm);
+    disableButton(submitButton);
   } else {
-    profileButtonElm.disabled = false;
+    submitButton.disabled = false;
   }
 };
 
-const disableButton = (profileButtonElm) => {
-  profileButtonElm.disabled = true;
+const disableButton = (submitButton) => {
+  submitButton.disabled = true;
 };
 
 const resetValidation = (formElement, inputList, config) => {
@@ -60,16 +60,14 @@ const setEventListeners = (formElement, config) => {
   const inputList = Array.from(
     formElement.querySelectorAll(config.inputSelector)
   );
-  const profileButtonElm = formElement.querySelector(
-    config.submitButtonSelector
-  );
+  const submitButton = formElement.querySelector(config.submitButtonSelector);
 
-  toggleButtonState(inputList, profileButtonElm, config);
+  toggleButtonState(inputList, submitButton, config);
 
   inputList.forEach((inputElement) => {
     inputElement.addEventListener("input", function () {
       checkInputValidity(formElement, inputElement, config);
-      toggleButtonState(inputList, profileButtonElm, config);
+      toggleButtonState(inputList, submitButton, config);
     });
   });
 };
