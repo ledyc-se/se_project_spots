@@ -15,8 +15,12 @@ const showInputError = (formElement, inputElement, errorMsg, config) => {
 
 const hideInputError = (formElement, inputElement, config) => {
   const errorMsgEl = formElement.querySelector(`#${inputElement.id}-error`);
-  inputElement.classList.remove(config.inputErrorClass);
-  errorMsgEl.textContent = " ";
+  if (errorMsgEl) {
+    errorMsgEl.textContent = "";
+    errorMsgEl.classList.remove(config.inputErrorClass);
+
+    inputElement.classList.remove(config.inputErrorClass);
+  }
 };
 
 const checkInputValidity = (formElement, inputElement, config) => {
@@ -50,7 +54,7 @@ const disableButton = (submitButton) => {
   submitButton.disabled = true;
 };
 
-const resetValidation = (formElement, inputList, config) => {
+const resetValidation = (formElement, inputList) => {
   inputList.forEach((input) => {
     hideInputError(formElement, input);
   });
