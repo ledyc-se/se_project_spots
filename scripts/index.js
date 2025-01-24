@@ -75,10 +75,12 @@ function closeModalOverlay(evt) {
 profileEditButton.addEventListener("click", () => {
   editModalNameInput.value = profileName.textContent;
   editModalDescriptionInput.value = profileDescription.textContent;
-  resetValidation(profileEditButton, [
-    editModalNameInput,
-    editModalDescriptionInput,
-  ]);
+  resetValidation(
+    editFormElement,
+    [editModalNameInput, editModalDescriptionInput],
+    editFormElement.querySelector(".modal__submit-btn")
+  );
+
   openModal(editModal);
 });
 
@@ -108,8 +110,9 @@ function handleNewPostFormSubmit(evt) {
 
   const cardElement = getCardElement(inputValues);
   cardsList.prepend(cardElement);
-  disableButton(cardSubmitBtn);
   closeModal(cardModal);
+
+  disableButton(cardSubmitBtn);
 }
 
 function getCardElement(data) {

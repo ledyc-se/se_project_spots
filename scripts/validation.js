@@ -9,17 +9,14 @@ const settings = {
 
 const showInputError = (formElement, inputElement, errorMsg, config) => {
   const errorMsgEl = formElement.querySelector(`#${inputElement.id}-error`);
-  inputElement.classList.add(config.inputErrorClass);
   errorMsgEl.textContent = errorMsg;
+  inputElement.classList.add(config.inputErrorClass);
 };
 
 const hideInputError = (formElement, inputElement, config) => {
   const errorMsgEl = formElement.querySelector(`#${inputElement.id}-error`);
   if (errorMsgEl) {
     errorMsgEl.textContent = "";
-    errorMsgEl.classList.remove(config.inputErrorClass);
-
-    inputElement.classList.remove(config.inputErrorClass);
   }
 };
 
@@ -54,10 +51,11 @@ const disableButton = (submitButton) => {
   submitButton.disabled = true;
 };
 
-const resetValidation = (formElement, inputList) => {
+const resetValidation = (formElement, inputList, submitButton, config) => {
   inputList.forEach((input) => {
     hideInputError(formElement, input);
   });
+  toggleButtonState(inputList, submitButton, config);
 };
 
 const setEventListeners = (formElement, config) => {
