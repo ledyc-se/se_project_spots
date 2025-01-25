@@ -166,8 +166,12 @@
   transition-delay: 0.3s;
 }
 
-.button_inactive {
-  opacity: 50%;
+.modal__button_inactive {
+  opacity: 0.5;
+}
+
+.modal__button_inactive:hover {
+  opacity: 0.5;
 }
 
 @media screen and (max-width: 320px) {
