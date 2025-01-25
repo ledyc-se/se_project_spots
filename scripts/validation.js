@@ -41,16 +41,17 @@ const hasInvalidInput = (inputList) => {
 
 const toggleButtonState = (inputList, submitButton, config) => {
   if (hasInvalidInput(inputList)) {
-    disableButton(submitButton);
-    submitButton.classList.add("modal__button_inactive");
+    disableButton(submitButton, config);
+    submitButton.classList.add(config.inactiveButtonClass);
   } else {
     submitButton.disabled = false;
-    submitButton.classList.remove("modal__button_inactive");
+    submitButton.classList.remove(config.inactiveButtonClass);
   }
 };
 
-const disableButton = (submitButton) => {
+const disableButton = (submitButton, config) => {
   submitButton.disabled = true;
+  submitButton.classList.add(config.inactiveButtonClass);
 };
 
 const resetValidation = (formElement, inputList, submitButton, config) => {

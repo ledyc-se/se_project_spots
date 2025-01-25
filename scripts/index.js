@@ -36,7 +36,6 @@ const profileDescription = document.querySelector(".profile__description");
 
 const editFormElement = document.querySelector(".modal__form");
 const editModal = document.querySelector("#edit-modal");
-const cardSubmitBtn = editFormElement.querySelector(".modal__button");
 const editModalCloseBtn = document.querySelector(".modal__close-btn");
 const editModalNameInput = editModal.querySelector("#profile-name-input");
 const editModalDescriptionInput = editModal.querySelector(
@@ -56,6 +55,7 @@ const previewModalCaptionEl = previewModal.querySelector(".modal__caption");
 const previewModalCloseBtn = previewModal.querySelector(
   ".modal__close-btn-preview"
 );
+const cardSubmitBtn = cardFormModalNewPost.querySelector(".modal__button");
 
 const cardTemplate = document.querySelector("#card-template");
 const cardsList = document.querySelector(".cards__list");
@@ -78,7 +78,8 @@ profileEditButton.addEventListener("click", () => {
   resetValidation(
     editFormElement,
     [editModalNameInput, editModalDescriptionInput],
-    editFormElement.querySelector(".modal__submit-btn")
+    editFormElement.querySelector(".modal__submit-btn"),
+    settings
   );
 
   openModal(editModal);
