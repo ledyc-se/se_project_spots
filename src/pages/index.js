@@ -25,6 +25,7 @@ const profileDescription = document.querySelector(".profile__description");
 
 let selectedCard;
 let selectedCardId;
+let currentUserId;
 
 //Delete
 const deleteConfirmationModal = document.querySelector(
@@ -32,9 +33,6 @@ const deleteConfirmationModal = document.querySelector(
 );
 const deleteConfirmationForm = deleteConfirmationModal.querySelector(
   "#delete-confirmation-form"
-);
-const deleteConfirmationCancel = document.querySelector(
-  "#cancel-confirmation-button"
 );
 
 const deleteConfirmationBtn = document.querySelector(
@@ -73,28 +71,6 @@ const initialCards = [
   },
 ];
 
-const api = new Api({
-  baseUrl: "https://around-api.en.tripleten-services.com/v1",
-  headers: {
-    authorization: "405e0a22-ee55-4a2d-b905-d3c2cbdb8a74",
-    "Content-Type": "application/json",
-  },
-});
-
-api
-  .getAppInfo()
-  .then(([userData, cards]) => {
-    profileName.textContent = userData.name;
-    spotsAvatar.src = userData.avatar;
-    profileDescription.textContent = userData.about;
-
-    cards.forEach((card) => {
-      const cardElement = getCardElement(card);
-      cardsList.append(cardElement);
-    });
-  })
-  .catch((err) => console.error("Error:", err));
-
 const profileEditButton = document.querySelector(".profile__edit-btn");
 
 //Edit
@@ -105,6 +81,7 @@ const editModalNameInput = editModal.querySelector("#profile-name-input");
 const editModalDescriptionInput = editModal.querySelector(
   "#profile-description-input"
 );
+const editSubmitBtn = editModal.querySelector(".modal__submit-btn");
 
 //Card
 const cardModal = document.querySelector("#add-card-modal");
@@ -132,6 +109,30 @@ const avatarCloseBtn = avatarModal.querySelector(".modal__close-btn");
 const avatarSubmitBtn = avatarModal.querySelector(".modal__submit-btn");
 const avatarInput = avatarModal.querySelector(".modal__input");
 const avatarForm = avatarModal.querySelector(".modal__form");
+
+const api = new Api({
+  baseUrl: "https://around-api.en.tripleten-services.com/v1",
+  headers: {
+    authorization: "405e0a22-ee55-4a2d-b905-d3c2cbdb8a74",
+    "Content-Type": "application/json",
+  },
+});
+
+api
+  .getAppInfo()
+  .then(([userData, cards]) => {
+    currentUserId = userData._id;
+
+    profileName.textContent = userData.name;
+    spotsAvatar.src = userData.avatar;
+    profileDescription.textContent = userData.about;
+
+    cards.forEach((card) => {
+      const cardElement = getCardElement(card);
+      cardsList.append(cardElement);
+    });
+  })
+  .catch((err) => console.error("Error:", err));
 
 function openModal(modal) {
   modal.classList.add("modal_opened");
@@ -167,13 +168,12 @@ function closeModal(modal) {
 
 function handleEditFormSubmit(evt) {
   evt.preventDefault();
-
   const data = {
     name: editModalNameInput.value,
     about: editModalDescriptionInput.value,
   };
 
-  setButtonText(submitBtn, true);
+  setButtonText(editSubmitBtn, true);
 
   api
     .editUserInfo(data)
@@ -184,23 +184,28 @@ function handleEditFormSubmit(evt) {
     })
     .catch(console.error)
     .finally(() => {
-      setButtonText(submitBtn, true, defaultText);
+      setButtonText(editSubmitBtn, false);
     });
 }
 
 function handleNewPostFormSubmit(evt) {
   evt.preventDefault();
+
   const inputValues = {
     name: editCardNameInput.value,
     link: editCardLinkInput.value,
   };
 
-  setButtonText(submitBtn, true);
+  setButtonText(cardSubmitBtn, true);
 
   api
     .addCard(inputValues)
-    .then((card) => {
-      const cardElement = getCardElement(card);
+    .then(() => {
+      return api.getInitialCards();
+    })
+    .then((cards) => {
+      const latestCard = cards[0];
+      const cardElement = getCardElement(latestCard);
       cardsList.prepend(cardElement);
       closeModal(cardModal);
       cardFormModalNewPost.reset();
@@ -208,14 +213,14 @@ function handleNewPostFormSubmit(evt) {
     })
     .catch(console.error)
     .finally(() => {
-      setButtonText(submitBtn, true, defaultText);
+      setButtonText(cardSubmitBtn, false);
     });
 }
 
 function handleAvatarSubmit(evt) {
   evt.preventDefault();
 
-  setButtonText(submitBtn, true);
+  setButtonText(avatarSubmitBtn, true);
 
   api
     .editAvatarInfo(avatarInput.value)
@@ -227,7 +232,7 @@ function handleAvatarSubmit(evt) {
     })
     .catch(console.error)
     .finally(() => {
-      setButtonText(submitBtn, true, defaultText);
+      setButtonText(avatarSubmitBtn, false);
     });
 }
 
@@ -235,7 +240,6 @@ function getCardElement(data) {
   const cardElement = cardTemplate.content
     .querySelector(".card")
     .cloneNode(true);
-
   const cardNameElement = cardElement.querySelector(".card__title");
   const cardImageElement = cardElement.querySelector(".card__image");
   const cardLikeBtn = cardElement.querySelector(".card__like-button");
@@ -245,7 +249,7 @@ function getCardElement(data) {
   cardImageElement.src = data.link;
   cardImageElement.alt = data.name;
 
-  if (data.likes && data.likes.some((user) => user._id === "me")) {
+  if (localStorage.getItem(`liked-${data._id}`) === "true") {
     cardLikeBtn.classList.add("card__like-button_liked");
   }
 
@@ -257,6 +261,10 @@ function getCardElement(data) {
     request
       .then((updatedCard) => {
         cardLikeBtn.classList.toggle("card__like-button_liked");
+        const nowLiked = cardLikeBtn.classList.contains(
+          "card__like-button_liked"
+        );
+        localStorage.setItem(`liked-${data._id}`, nowLiked);
       })
       .catch(console.error);
   });
@@ -268,7 +276,7 @@ function getCardElement(data) {
     previewModalImgEl.alt = data.name;
   });
 
-  cardDeleteBtn.addEventListener("click", (evt) =>
+  cardDeleteBtn.addEventListener("click", () =>
     handleDeleteCard(cardElement, data._id)
   );
 
@@ -278,7 +286,9 @@ function getCardElement(data) {
 function handleDeleteSubmit(evt) {
   evt.preventDefault();
 
-  setButtonText(submitBtn, true, "Deleting...");
+  const submitBtn = document.querySelectorAll(".modal__submit-btn");
+
+  setButtonText(deleteConfirmationBtn, true, "Deleting...");
 
   api
     .removeCard(selectedCardId)
@@ -288,7 +298,7 @@ function handleDeleteSubmit(evt) {
     })
     .catch(console.error)
     .finally(() => {
-      setButtonText(submitBtn, true, "Delete");
+      setButtonText(deleteConfirmationBtn, false, "Delete");
     });
 }
 
