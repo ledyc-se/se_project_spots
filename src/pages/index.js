@@ -86,6 +86,7 @@ const editModalNameInput = editModal.querySelector("#profile-name-input");
 const editModalDescriptionInput = editModal.querySelector(
   "#profile-description-input"
 );
+const editSubmitBtn = editModal.querySelector(".modal__submit-btn");
 
 //Card
 const cardModal = document.querySelector("#add-card-modal");
@@ -181,7 +182,22 @@ function handleEditFormSubmit(evt) {
     about: editModalDescriptionInput.value,
   };
 
-  renderLoading(cardSubmitBtn, true);
+  renderLoading(editSubmitBtn, true);
+
+  api
+    .editUserInfo(data)
+    .then((updatedUser) => {
+      profileName.textContent = updatedUser.name;
+      profileDescription.textContent = updatedUser.about;
+
+      closeModal(editModal);
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+    .finally(() => {
+      renderLoading(editSubmitBtn, false);
+    });
 }
 
 function handleNewPostFormSubmit(evt) {
@@ -246,20 +262,17 @@ function getCardElement(data) {
   }
 
   cardLikeBtn.addEventListener("click", () => {
-    const isLiked = cardLikeBtn.classList.contains("card__like-button_liked");
+    const isLiked = data.isLiked;
 
     const request = isLiked ? api.unlikeCard(data._id) : api.likeCard(data._id);
 
     request
       .then((updatedCard) => {
-        cardLikeBtn.classList.toggle("card__like-button_liked");
-        const nowLiked = cardLikeBtn.classList.contains(
-          "card__like-button_liked"
+        data.isLiked = updatedCard.isLiked;
+        cardLikeBtn.classList.toggle(
+          "card__like-button_liked",
+          updatedCard.isLiked
         );
-        const wasLiked = localStorage.getItem(`liked-${data._id}`) === "true";
-        if (data.isLiked || wasLiked) {
-          cardLikeBtn.classList.add("card__like-button_liked");
-        }
       })
       .catch(console.error);
   });
